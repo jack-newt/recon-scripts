@@ -1,5 +1,7 @@
-A few scripts that I've made to streamline commands I commonly use in CTFs, HtB boxes, and bug bounty hunting. Also serves as a project to better learn bash and the arguments for common commands.
+Recon Suite
 ---
+A few scripts that I've made to streamline commands I commonly use in CTFs, HtB boxes, and bug bounty hunting. Also serves as a project to better learn bash and the arguments for common commands.
+
 # portScan.sh
 Essentially an nmap wrapper that includes its most common use cases. Options include:
 
