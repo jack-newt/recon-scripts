@@ -2,7 +2,17 @@
 GREEN='\033[0;32m'
 RESET='\033[0m'
 
-# to-do: -o flag to send output to .txt file
+while getopts 'o:' output; do
+	case $output in
+		o)
+			output_file="$OPTARG"
+			[[ "$output_file" == *.txt ]] || output_file="$output_file.txt"
+			;;
+		*)	
+			exit 1
+			;;
+	esac
+done
 
 echo -e "${GREEN}
 ====================================================================
@@ -28,46 +38,57 @@ echo "Enter your Selection: "
 read -p "> " Selection
 echo "Enter your IP/Range: "
 read -p "> " IP
+echo;
 
 # to-do: while loop, back option, quit option
 case "$Selection" in
 	1)
 		echo "Simple Scan Selected!"
-		sudo nmap -sC -sV -T4 $"{IP}"
+		result=$(sudo nmap -sC -sV -T4 "${IP}")
 		;;
 	2)
 		echo "Sneaky Scan Selected!"
-		sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn $"{IP}"
+		result=$(sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn "${IP}")
 		;;
 	3)	
 		echo "Aggressive Scan Selected!"
-		sudo nmap -A $"{IP}"
+		result=$(sudo nmap -A "${IP}")
 		;;
 	4)
 		echo "Quick Scan Selected!"
-		sudo nmap -T5 -version-light -F $"{IP}"
+		result=(sudo nmap -T5 -version-light -F "${IP}")
 		;;
 	5)
 		echo "Deep Scan Selected!"
-		sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason $"{IP}"
+		result=(sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason "${IP}")
 		;;
 	6)
 		echo "UDP Simple Scan Selected!"
-		sudo nmap --top-ports 20 -sU -sV $"{IP}"
+		result=(sudo nmap --top-ports 20 -sU -sV "${IP}")
 		;;
 	7)
 		echo "UDP Quick Scan Selected!"
-		sudo nmap --top-ports 10 -sU -T5 $"{IP}"
+		result=(sudo nmap --top-ports 10 -sU -T5 "${IP}")
 		;;
 	8)
 		echo "UDP Deep Scan Selected!"
-		sudo nmap -p- -sU -sV --max-retries 2 --reason $"{IP}"
+		result=(sudo nmap -p- -sU -sV --max-retries 2 --reason "${IP}")
 		;;
 	9)
 		echo "ARP Scan Selected!"
-		sudo nmap -sn -PR $"{IP}"
+		result=(sudo nmap -sn -PR "${IP}")
 		;;
 	*)
 		echo "Select a valid number!"
 		;;
 esac
+
+
+if [[ -n "$output_file" ]]; then
+	echo; echo "Output sent to $output_file!"
+	printf "%s\n" "${result}" > $output_file
+else
+	printf "%s\n" "${result}"
+fi
+
+
