@@ -33,39 +33,39 @@ read -p "> " IP
 case "$Selection" in
 	1)
 		echo "Simple Scan Selected!"
-		sudo nmap -sC -sV -T4 $IP
+		sudo nmap -sC -sV -T4 $"{IP}"
 		;;
 	2)
 		echo "Sneaky Scan Selected!"
-		sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn $IP
+		sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn $"{IP}"
 		;;
 	3)	
 		echo "Aggressive Scan Selected!"
-		sudo nmap -A $IP
+		sudo nmap -A $"{IP}"
 		;;
 	4)
 		echo "Quick Scan Selected!"
-		sudo nmap -T5 -version-light -F $IP
+		sudo nmap -T5 -version-light -F $"{IP}"
 		;;
 	5)
 		echo "Deep Scan Selected!"
-		sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason $IP
+		sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason $"{IP}"
 		;;
 	6)
 		echo "UDP Simple Scan Selected!"
-		sudo nmap --top-ports 20 -sU -sV $IP
+		sudo nmap --top-ports 20 -sU -sV $"{IP}"
 		;;
 	7)
 		echo "UDP Quick Scan Selected!"
-		sudo nmap --top-ports 10 -sU -T5 $IP
+		sudo nmap --top-ports 10 -sU -T5 $"{IP}"
 		;;
 	8)
 		echo "UDP Deep Scan Selected!"
-		sudo nmap -p- -sU -sV --max-retries 2 --reason $IP
+		sudo nmap -p- -sU -sV --max-retries 2 --reason $"{IP}"
 		;;
 	9)
 		echo "ARP Scan Selected!"
-		sudo nmap -sn -PR $IP
+		sudo nmap -sn -PR $"{IP}"
 		;;
 	*)
 		echo "Select a valid number!"
