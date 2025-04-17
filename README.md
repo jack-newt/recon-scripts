@@ -32,6 +32,6 @@ Essentially an nmap wrapper that includes its most common use cases. Options inc
 9) ARP Scan
     `nmap -sn -PR <IP>`
 
-The `-o` flag can be used to send the output to a specified text file. Default is 
+The `-o` flag can be used to send the output to a specified text file. Default is *scan.txt*. 
 
 ---
