@@ -2,13 +2,15 @@
 GREEN='\033[0;32m'
 RESET='\033[0m'
 
-while getopts 'o:' output; do
+output_file="scan.txt"
+
+while getopts ':o:' output; do
 	case $output in
 		o)
 			output_file="$OPTARG"
 			[[ "$output_file" == *.txt ]] || output_file="$output_file.txt"
 			;;
-		*)	
+		\?)	
 			exit 1
 			;;
 	esac
@@ -34,61 +36,82 @@ ${RESET}
 9. ARP Scan
 "
 
-echo "Enter your Selection: "
-read -p "> " Selection
-echo "Enter your IP/Range: "
-read -p "> " IP
-echo;
+while true; do
 
-# to-do: while loop, back option, quit option
-case "$Selection" in
-	1)
-		echo "Simple Scan Selected!"
-		result=$(sudo nmap -sC -sV -T4 "${IP}")
-		;;
-	2)
-		echo "Sneaky Scan Selected!"
-		result=$(sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn "${IP}")
-		;;
-	3)	
-		echo "Aggressive Scan Selected!"
-		result=$(sudo nmap -A "${IP}")
-		;;
-	4)
-		echo "Quick Scan Selected!"
-		result=(sudo nmap -T5 -version-light -F "${IP}")
-		;;
-	5)
-		echo "Deep Scan Selected!"
-		result=(sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason "${IP}")
-		;;
-	6)
-		echo "UDP Simple Scan Selected!"
-		result=(sudo nmap --top-ports 20 -sU -sV "${IP}")
-		;;
-	7)
-		echo "UDP Quick Scan Selected!"
-		result=(sudo nmap --top-ports 10 -sU -T5 "${IP}")
-		;;
-	8)
-		echo "UDP Deep Scan Selected!"
-		result=(sudo nmap -p- -sU -sV --max-retries 2 --reason "${IP}")
-		;;
-	9)
-		echo "ARP Scan Selected!"
-		result=(sudo nmap -sn -PR "${IP}")
-		;;
-	*)
-		echo "Select a valid number!"
-		;;
-esac
+	echo "Enter your Selection: 	(r to reset, q to quit)"
+	read -p "> " Selection
 
+	if [[ "$Selection" == "q" ]]; then
+		exit
+	fi
 
-if [[ -n "$output_file" ]]; then
-	echo; echo "Output sent to $output_file!"
-	printf "%s\n" "${result}" > $output_file
-else
-	printf "%s\n" "${result}"
-fi
+	if [[ "$Selection" == "r" ]]; then
+		continue
+	fi
 
+	echo "Enter your IP/Range: 	(r to reset, q to quit)"
+	read -p "> " IP
+	echo;
 
+	if [[ "$IP" == "q" ]]; then
+		exit
+	fi
+
+	if [[ "$IP" == "r" ]]; then
+		continue
+	fi
+
+	case "$Selection" in
+		1)
+			echo "Simple Scan Selected!"
+			result=$(sudo nmap -sC -sV -T4 "${IP}")
+			;;
+		2)
+			echo "Sneaky Scan Selected!"
+			result=$(sudo nmap -sC -sV -sS -T1 --scan-delay 250ms -Pn "${IP}")
+			;;
+		3)	
+			echo "Aggressive Scan Selected!"
+			result=$(sudo nmap -A "${IP}")
+			;;
+	
+		4)
+			echo "Quick Scan Selected!"
+			result=$(sudo nmap -T5 -version-light -F "${IP}")
+			;;
+		5)
+			echo "Deep Scan Selected!"
+			result=$(sudo nmap -p- -sC -sV -version-all --max-retries 2 --reason "${IP}")
+			;;
+		6)
+			echo "UDP Simple Scan Selected!"
+			result=$(sudo nmap --top-ports 20 -sU -sV "${IP}")
+			;;
+		7)
+			echo "UDP Quick Scan Selected!"
+			result=$(sudo nmap --top-ports 10 -sU -T5 "${IP}")
+			;;
+		8)
+			echo "UDP Deep Scan Selected!"
+			result=$(sudo nmap -p- -sU -sV --max-retries 2 --reason "${IP}")
+			;;
+		9)
+			echo "ARP Scan Selected!"
+			result=$(sudo nmap -sn -PR "${IP}")
+			;;
+		*)
+			echo "Select a valid number!"
+			;;
+	esac
+
+ 
+	if [[ -n "$output" ]]; then
+		echo; echo "Output sent to $output_file!"
+		printf "%s\n" "${result}" >> $output_file
+		printf "%s\n" "---------------------------------------------" >> "$output_file"
+		printf "\n" >> "$output_file"
+	else
+		printf "%s\n" "${result}"
+	fi
+
+done
